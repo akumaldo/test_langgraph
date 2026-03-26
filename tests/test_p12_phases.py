@@ -70,5 +70,29 @@ class AnalyzeNodeTest(unittest.TestCase):
         self.assertTrue(callable(build_profitability_subgraph))
 
 
+class DebatePhaseTest(unittest.TestCase):
+    """Test the debate phase builds valid AG2 agents."""
+
+    def test_build_debate_agents_returns_three(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.phases.debate import (
+            build_debate_agents,
+        )
+
+        agents = build_debate_agents(
+            data_summary="Revenue growing 5% YoY",
+            analysis_summary="Fair value $245, trading at $228",
+        )
+        self.assertEqual(len(agents), 3)
+        names = {a.name for a in agents}
+        self.assertEqual(names, {"Bull_Analyst", "Bear_Analyst", "Moderator"})
+
+    def test_run_debate_node_exists(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.phases.debate import (
+            run_debate,
+        )
+
+        self.assertTrue(callable(run_debate))
+
+
 if __name__ == "__main__":
     unittest.main()
