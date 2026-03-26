@@ -94,5 +94,65 @@ class DebatePhaseTest(unittest.TestCase):
         self.assertTrue(callable(run_debate))
 
 
+class ThesisPhaseTest(unittest.TestCase):
+    """Test the thesis synthesis phase."""
+
+    def test_build_thesis_subgraph_compiles(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.phases.thesis import (
+            build_thesis_subgraph,
+        )
+
+        graph = build_thesis_subgraph()
+        self.assertIsNotNone(graph)
+
+    def test_synthesize_thesis_node_exists(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.phases.thesis import (
+            synthesize_thesis,
+        )
+
+        self.assertTrue(callable(synthesize_thesis))
+
+
+class ReportPhaseTest(unittest.TestCase):
+    """Test report generation."""
+
+    def test_generate_report_produces_markdown(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.phases.report import (
+            generate_report,
+        )
+        from langgraph_portfolio.projects.project_12_analyst.state import InvestmentState
+
+        state: InvestmentState = {
+            "ticker": "AAPL",
+            "company_name": "Apple Inc.",
+            "financials": {},
+            "ratios": {},
+            "estimates": {},
+            "insider_trades": [],
+            "grades": [],
+            "earnings_transcripts": [],
+            "data_summary": "Revenue: $385B",
+            "profitability_analysis": "Margins stable",
+            "valuation_analysis": "Fair value $245",
+            "growth_analysis": "Growing 5% YoY",
+            "analysis_summary": "Solid fundamentals",
+            "debate_transcript": "Bull said X, Bear said Y",
+            "key_disagreements": ["Valuation premium justified?"],
+            "investment_thesis": "Buy with medium confidence",
+            "risk_factors": ["Slowing growth", "China risk"],
+            "catalysts": ["AI spending", "Services growth"],
+            "confidence_level": "MEDIUM",
+            "report_path": "",
+            "current_phase": "report",
+            "human_feedback": "",
+            "messages": [],
+        }
+        result = generate_report(state)
+        self.assertIn("report_path", result)
+        self.assertIn("AAPL", result["report_path"])
+        # Verify the report content
+        self.assertIn("# Investment Analysis: AAPL", result.get("_report_content", ""))
+
+
 if __name__ == "__main__":
     unittest.main()
