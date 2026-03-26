@@ -173,6 +173,10 @@ async def _fetch_fmp_data(ticker: str) -> dict[str, Any]:
         insider_trades,
         insider_stats,
         transcript_dates,
+        financial_scores,
+        financial_growth,
+        revenue_segments,
+        geo_segments,
     ) = await asyncio.gather(
         client.get_profile(ticker),
         client.get_income_statement(ticker),
@@ -186,6 +190,10 @@ async def _fetch_fmp_data(ticker: str) -> dict[str, Any]:
         client.get_insider_trades(ticker),
         client.get_insider_trade_statistics(ticker),
         client.get_transcript_dates(ticker),
+        client.get_financial_scores(ticker),
+        client.get_financial_growth(ticker),
+        client.get_revenue_product_segmentation(ticker),
+        client.get_revenue_geographic_segmentation(ticker),
     )
 
     # Fetch 2 most recent transcripts
@@ -219,6 +227,10 @@ async def _fetch_fmp_data(ticker: str) -> dict[str, Any]:
         "insider_trades": insider_trades,
         "insider_stats": insider_stats,
         "transcripts": transcripts,
+        "financial_scores": financial_scores,
+        "financial_growth": financial_growth,
+        "revenue_segments": revenue_segments,
+        "geo_segments": geo_segments,
     }
 
 
@@ -280,7 +292,11 @@ def gather_data(state: InvestmentState) -> dict:
         f"Balance Sheet:\n{_truncate_json(raw_data['balance'])}\n\n"
         f"Cash Flow:\n{_truncate_json(raw_data['cashflow'])}\n\n"
         f"Key Metrics TTM:\n{_truncate_json(raw_data['metrics_ttm'])}\n\n"
-        f"Ratios TTM:\n{_truncate_json(raw_data['ratios_ttm'])}"
+        f"Ratios TTM:\n{_truncate_json(raw_data['ratios_ttm'])}\n\n"
+        f"Financial Scores (Altman Z, Piotroski):\n{_truncate_json(raw_data['financial_scores'])}\n\n"
+        f"Financial Growth:\n{_truncate_json(raw_data['financial_growth'])}\n\n"
+        f"Revenue by Product:\n{_truncate_json(raw_data['revenue_segments'])}\n\n"
+        f"Revenue by Geography:\n{_truncate_json(raw_data['geo_segments'])}"
     )
 
     crew.tasks[1].description += (
