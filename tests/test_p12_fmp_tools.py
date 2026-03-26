@@ -66,6 +66,26 @@ class FMPClientTest(unittest.TestCase):
         self.assertIn("/stable/key-metrics-ttm", call_url)
 
     @patch("langgraph_portfolio.projects.project_12_analyst.tools.fmp.httpx.AsyncClient")
+    def test_get_insider_trades(self, mock_client_cls) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
+
+        mock_response = MagicMock()
+        mock_response.json.return_value = [{"symbol": "AAPL", "transactionType": "S-Sale"}]
+        mock_response.raise_for_status = MagicMock()
+
+        mock_client = AsyncMock()
+        mock_client.get.return_value = mock_response
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        client = FMPClient(api_key="test-key")
+        result = run(client.get_insider_trades("AAPL"))
+
+        call_url = mock_client.get.call_args[0][0]
+        self.assertIn("/stable/search-insider-trades", call_url)
+
+    @patch("langgraph_portfolio.projects.project_12_analyst.tools.fmp.httpx.AsyncClient")
     def test_get_financial_scores(self, mock_client_cls) -> None:
         from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
 

@@ -12,10 +12,13 @@ The FMP stable API: GET https://financialmodelingprep.com/stable/<endpoint>?symb
 Environment variable: FMP_API_KEY (required)
 """
 
+import logging
 import os
 from typing import Any
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://financialmodelingprep.com/stable"
 
@@ -39,6 +42,9 @@ class FMPClient:
 
         async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.get(url, params=request_params)
+            if response.status_code == 404:
+                logger.warning("FMP 404 for endpoint '%s' — returning empty list", endpoint)
+                return []
             response.raise_for_status()
             return response.json()
 
@@ -67,7 +73,7 @@ class FMPClient:
     ) -> list[dict]:
         """Cash flow statement (operating, investing, financing, FCF)."""
         return await self._get(
-            "cash-flow-statement",
+            "cashflow-statement",
             {"symbol": ticker, "period": period, "limit": str(limit)},
         )
 
@@ -79,7 +85,7 @@ class FMPClient:
 
     async def get_ratios_ttm(self, ticker: str) -> list[dict]:
         """Trailing twelve months financial ratios."""
-        return await self._get("ratios-ttm", {"symbol": ticker})
+        return await self._get("metrics-ratios-ttm", {"symbol": ticker})
 
     async def get_key_metrics(
         self, ticker: str, period: str = "annual", limit: int = 5
@@ -92,11 +98,11 @@ class FMPClient:
 
     # -- Market Intelligence --
 
-    async def get_analyst_estimates(self, ticker: str, limit: int = 4) -> list[dict]:
+    async def get_analyst_estimates(self, ticker: str, period: str = "annual", limit: int = 4) -> list[dict]:
         """Analyst consensus estimates (revenue, EPS, growth)."""
         return await self._get(
-            "analyst-estimates",
-            {"symbol": ticker, "limit": str(limit)},
+            "financial-estimates",
+            {"symbol": ticker, "period": period, "limit": str(limit)},
         )
 
     async def get_price_target_consensus(self, ticker: str) -> list[dict]:
@@ -113,14 +119,14 @@ class FMPClient:
     async def get_insider_trades(self, ticker: str, limit: int = 20) -> list[dict]:
         """Recent insider trades."""
         return await self._get(
-            "insider-trading",
+            "search-insider-trades",
             {"symbol": ticker, "limit": str(limit)},
         )
 
     async def get_insider_trade_statistics(self, ticker: str) -> list[dict]:
         """Insider trading statistics summary."""
         return await self._get(
-            "insider-trading-transaction-type",
+            "insider-trade-statistics",
             {"symbol": ticker},
         )
 
@@ -128,11 +134,11 @@ class FMPClient:
 
     async def get_profile(self, ticker: str) -> list[dict]:
         """Company profile (name, sector, market cap, description)."""
-        return await self._get("profile", {"symbol": ticker})
+        return await self._get("profile-symbol", {"symbol": ticker})
 
     async def get_peers(self, ticker: str) -> list[str]:
         """Peer companies for comparison."""
-        result = await self._get("stock-peers", {"symbol": ticker})
+        result = await self._get("peers", {"symbol": ticker})
         if result and isinstance(result, list) and "peersList" in result[0]:
             return result[0]["peersList"]
         return []
@@ -141,12 +147,12 @@ class FMPClient:
 
     async def get_transcript_dates(self, ticker: str) -> list[dict]:
         """Available earnings transcript dates."""
-        return await self._get("earning-call-transcript-dates", {"symbol": ticker})
+        return await self._get("transcripts-dates-by-symbol", {"symbol": ticker})
 
     async def get_transcript(self, ticker: str, year: int, quarter: int) -> list[dict]:
         """Single earnings call transcript."""
         return await self._get(
-            "earning-call-transcript",
+            "search-transcripts",
             {"symbol": ticker, "year": str(year), "quarter": str(quarter)},
         )
 
@@ -154,7 +160,7 @@ class FMPClient:
 
     async def get_dcf(self, ticker: str) -> list[dict]:
         """Discounted cash flow valuation."""
-        return await self._get("discounted-cash-flow", {"symbol": ticker})
+        return await self._get("dcf-advanced", {"symbol": ticker})
 
     async def get_enterprise_values(
         self, ticker: str, limit: int = 5
@@ -180,7 +186,7 @@ class FMPClient:
     ) -> list[dict]:
         """Pre-computed growth rates (revenue, EPS, FCF, etc.)."""
         return await self._get(
-            "financial-growth",
+            "financial-statement-growth",
             {"symbol": ticker, "period": period, "limit": str(limit)},
         )
 

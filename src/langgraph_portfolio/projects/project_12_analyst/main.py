@@ -19,6 +19,10 @@ The user can also type commands at any pause point:
 
 from __future__ import annotations
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import Command
 
@@ -74,9 +78,10 @@ def _stream_with_interrupts(app, input_value, config) -> dict | None:
         # -----------------------------------------------------------
         for chunk in app.stream(current_input, config=config, stream_mode="updates"):
             for node_name, updates in chunk.items():
-                phase = updates.get("current_phase", "")
-                if phase:
-                    print(f"\n  [Phase: {phase}]")
+                if isinstance(updates, dict):
+                    phase = updates.get("current_phase", "")
+                    if phase:
+                        print(f"\n  [Phase: {phase}]")
 
         # -----------------------------------------------------------
         # CONCEPT: interrupt-based human-in-the-loop

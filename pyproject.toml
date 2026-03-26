@@ -17,6 +17,7 @@ llama-index = {version = "^0.12.0", python = ">=3.11,<=3.13"}
 crewai = {version = "^1.11.0", extras = ["litellm"], python = ">=3.11,<3.14"}
 beautifulsoup4 = "^4.14.3"
 ag2 = "^0.11.4"
+python-dotenv = "^1.1.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
