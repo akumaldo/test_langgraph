@@ -32,6 +32,7 @@ project-7-debate-arena = "langgraph_portfolio.projects.project_7_debate_arena.ma
 project-8-beeai-research = "langgraph_portfolio.projects.project_8_beeai_research.main:main"
 project-9-rag-pipeline = "langgraph_portfolio.projects.project_9_rag_pipeline.main:main"
 project-11-mcp-server = "langgraph_portfolio.projects.project_11_mcp_server.main:main"
+project-12-analyst = "langgraph_portfolio.projects.project_12_analyst.main:main"
 
 [build-system]
 requires = ["poetry-core>=1.9.0"]
