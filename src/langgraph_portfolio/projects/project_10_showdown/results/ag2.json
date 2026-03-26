@@ -1,0 +1,15 @@
+{
+  "framework": "ag2",
+  "elapsed_seconds": 132.91,
+  "question": "What are the main uses for AI orchestration in industry today?",
+  "summary": "AI orchestration is primarily used in financial services for fraud detection, algorithmic trading, and regulatory compliance through multi-agent systems. It is also widely adopted in healthcare to improve diagnostics, accelerate drug discovery, and optimize patient flow.",
+  "findings": [
+    "Financial institutions utilize multi-agent systems to coordinate complex workflows in fraud detection and algorithmic trading.",
+    "Healthcare organizations leverage AI orchestration to enhance diagnostics, accelerate drug discovery, and optimize patient flow."
+  ],
+  "citations": [
+    "AI Orchestration in Financial Services - Industry Report 2024",
+    "AI Orchestration in Healthcare - Tech Review 2024"
+  ],
+  "structured_output_success": true
+}

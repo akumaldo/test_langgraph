@@ -1,0 +1,22 @@
+{
+  "framework": "langgraph",
+  "elapsed_seconds": 27.07,
+  "question": "What are the main uses for AI orchestration in industry today?",
+  "summary": "AI orchestration in industry primarily enables multi-agent systems to coordinate complex workflows across financial services, healthcare, manufacturing, and customer service sectors, improving efficiency and accuracy through specialized agent collaboration.",
+  "findings": [
+    "Financial institutions use AI orchestration for fraud detection, algorithmic trading, and regulatory compliance through multi-agent systems",
+    "Healthcare organizations leverage AI orchestration for diagnostics, drug discovery, and hospital operations optimization",
+    "Manufacturing embraces AI orchestration for predictive maintenance, supply chain coordination, and quality assurance",
+    "Customer service orchestration moves beyond simple chatbots to coordinated multi-agent systems handling complex interactions",
+    "Orchestration reduces false positives by 40% in fraud detection, cuts drug discovery time from months to days, and improves bed turnover rates by 20%",
+    "Multi-agent systems catch 15% more early-stage conditions in healthcare diagnostics than single-model systems",
+    "Predictive maintenance reduces unplanned downtime by up to 50% through coordinated sensor data and scheduling agents"
+  ],
+  "citations": [
+    "Industry Report 2024 - Financial Services",
+    "Tech Review 2024 - Healthcare",
+    "Industry Analysis 2024 - Manufacturing",
+    "Business Tech Report 2024 - Customer Service"
+  ],
+  "structured_output_success": true
+}

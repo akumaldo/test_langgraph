@@ -1,0 +1,20 @@
+{
+  "framework": "llamaindex",
+  "elapsed_seconds": 177.71,
+  "question": "What are the main uses for AI orchestration in industry today?",
+  "summary": "The provided documents demonstrate a clear trend toward moving beyond single-model AI solutions toward multi-agent orchestration. Industries utilize a layered architecture where specialized agents perform specific tasks to maximize efficiency and scalability.",
+  "findings": [
+    "Specialization is key as no single AI model handles all tasks efficiently.",
+    "Orchestration enables real-time collaboration for complex workflows across industries.",
+    "Systems optimize resource allocation in manufacturing, healthcare, and customer service sectors.",
+    "The framework ensures auditability and traceability through a central orchestration layer.",
+    "Agents prioritize collaboration over competition for better end-to-end operational stability."
+  ],
+  "citations": [
+    "Document 1 - Source",
+    "Document 2 - Source",
+    "Document 3 - Source",
+    "Document 4 - Source"
+  ],
+  "structured_output_success": true
+}

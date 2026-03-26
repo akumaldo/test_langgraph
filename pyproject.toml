@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "langgraph-portfolio"
+version = "0.1.0"
+description = "A scaffolded LangGraph portfolio covering chatbot, research, multi-agent, analysis, and capstone workflows."
+authors = ["Bruno Lunardi <bruno@example.com>"]
+readme = "README.md"
+packages = [{ include = "langgraph_portfolio", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.15"
+pydantic = "^2.0"
+langgraph = "^0.2.0"
+langchain-ollama = "^0.3.0"
+pandas = "^2.0"
+matplotlib = "^3.8"
+llama-index = {version = "^0.12.0", python = ">=3.11,<=3.13"}
+crewai = {version = "^1.11.0", extras = ["litellm"], python = ">=3.11,<3.14"}
+beautifulsoup4 = "^4.14.3"
+ag2 = "^0.11.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+
+[tool.poetry.scripts]
+project-1-chatbot = "langgraph_portfolio.projects.project_1_chatbot.main:main"
+project-2-research-agent = "langgraph_portfolio.projects.project_2_research_agent.main:main"
+project-3-writing-team-langgraph = "langgraph_portfolio.projects.project_3_writing_team_langgraph.main:main"
+project-3-writing-team-crewai = "langgraph_portfolio.projects.project_3_writing_team_crewai.main:main"
+project-4-data-analyst = "langgraph_portfolio.projects.project_4_data_analyst.main:main"
+project-5-capstone = "langgraph_portfolio.projects.project_5_capstone.main:main"
+project-7-debate-arena = "langgraph_portfolio.projects.project_7_debate_arena.main:main"
+project-8-beeai-research = "langgraph_portfolio.projects.project_8_beeai_research.main:main"
+project-9-rag-pipeline = "langgraph_portfolio.projects.project_9_rag_pipeline.main:main"
+
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
