@@ -109,5 +109,15 @@ class OrchestratorTest(unittest.TestCase):
         self.assertIn(result, ["analyze", "debate", "thesis", "report", "gather"])
 
 
+class MCPServerTest(unittest.TestCase):
+    """Test that the MCP server initializes and has expected tools."""
+
+    def test_server_creates(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.server import server
+
+        self.assertIsNotNone(server)
+        self.assertEqual(server.name, "investment-committee")
+
+
 if __name__ == "__main__":
     unittest.main()
