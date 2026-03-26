@@ -37,8 +37,10 @@ class FMPClientTest(unittest.TestCase):
         self.assertEqual(result[0]["revenue"], 385000000000)
         mock_client.get.assert_called_once()
         call_url = mock_client.get.call_args[0][0]
-        self.assertIn("income-statement", call_url)
-        self.assertIn("AAPL", call_url)
+        # Stable API: endpoint is in the URL path, ticker in query params
+        self.assertIn("/stable/income-statement", call_url)
+        call_params = mock_client.get.call_args[1].get("params", {})
+        self.assertEqual(call_params["symbol"], "AAPL")
 
     @patch("langgraph_portfolio.projects.project_12_analyst.tools.fmp.httpx.AsyncClient")
     def test_get_key_metrics_ttm(self, mock_client_cls) -> None:
@@ -60,6 +62,8 @@ class FMPClientTest(unittest.TestCase):
         result = run(client.get_key_metrics_ttm("AAPL"))
 
         self.assertEqual(result[0]["peRatioTTM"], 28.5)
+        call_url = mock_client.get.call_args[0][0]
+        self.assertIn("/stable/key-metrics-ttm", call_url)
 
     def test_client_requires_api_key(self) -> None:
         from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
