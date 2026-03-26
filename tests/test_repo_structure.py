@@ -10,12 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 class RepoStructureTest(unittest.TestCase):
     def test_expected_directories_exist(self) -> None:
         expected = [
-            ROOT / "project_1_chatbot",
-            ROOT / "project_2_research_agent",
-            ROOT / "project_3_writing_team_langgraph",
-            ROOT / "project_3_writing_team_crewai",
-            ROOT / "project_4_data_analyst",
-            ROOT / "project_5_support_bot",
             ROOT / "src" / "langgraph_portfolio" / "core",
             ROOT / "src" / "langgraph_portfolio" / "projects",
             ROOT / "docs",
@@ -31,4 +25,3 @@ class RepoStructureTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

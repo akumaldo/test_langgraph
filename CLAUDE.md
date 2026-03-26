@@ -4,35 +4,66 @@
 
 A progressive learning portfolio with 10 projects that teach agentic AI frameworks (LangGraph, CrewAI, AG2, BeeAI, LlamaIndex). Each project builds on concepts from the previous one. See `docs/portfolio_expansion_plan.md` for the full roadmap.
 
+## Commands
+
+```bash
+# Install
+poetry install                        # core deps (LangGraph, CrewAI, AG2)
+pip install beeai-framework           # BeeAI (dep conflict with CrewAI in Poetry)
+pip install llama-index-llms-ollama llama-index-embeddings-ollama llama-index-readers-file llama-index-retrievers-bm25 pymupdf  # LlamaIndex extras
+pip install mcp                       # MCP SDK
+
+# Ollama models (must be running: ollama serve)
+ollama pull qwen3.5:35b              # main LLM (P1-P8, P10-P11)
+ollama pull qwen3.5:2b               # lighter LLM (P9 only)
+ollama pull qwen3-embedding           # embeddings (P9)
+
+# Run projects
+poetry run project-1-chatbot
+poetry run project-2-research-agent
+poetry run project-3-writing-team-langgraph
+poetry run project-3-writing-team-crewai
+poetry run project-4-data-analyst
+poetry run project-5-capstone          # support bot
+poetry run project-7-debate-arena
+poetry run project-8-beeai-research
+poetry run project-9-rag-pipeline
+poetry run project-11-mcp-server
+
+# Tests
+poetry run pytest
+```
+
 ## Project Structure
 
 ```
-project_1_chatbot/          → entry point (thin wrapper)
-project_2_research_agent/   → entry point (thin wrapper)
-project_3_writing_team_*/   → entry points (LangGraph + CrewAI versions)
-project_4_data_analyst/     → entry point
-project_5_support_bot/      → entry point
-src/langgraph_portfolio/    → actual implementation code
+src/langgraph_portfolio/    → all implementation code
   core/                     → shared models, graph engine, knowledge base, fixtures
-  projects/                 → one subpackage per project
+  projects/                 → one subpackage per project (each has main.py)
+tests/                      → all tests (shared + per-project smoke tests)
+docs/                       → planning & architecture docs
+scripts/                    → utility scripts
 ```
 
-- Each `project_N_*/main.py` is a thin entry point that imports from `src/langgraph_portfolio/projects/...`
+- All code lives in `src/langgraph_portfolio/projects/`. Entry points are `poetry run` scripts defined in `pyproject.toml`.
 - The `core/` module provides shared infrastructure: `BaseWorkflowState`, `GraphBuilder`, `Document`, `KnowledgeBase`, etc.
 - P1-P3 have both a **scaffold** version (custom GraphBuilder) and a **real LangGraph** version. P4+ are real LangGraph only.
 
 ## Progress
 
-- **Project 1 (Chatbot)**: DONE. Has both scaffold (`graph.py`) and real LangGraph (`langgraph_chatbot.py`) versions. Concepts: state, nodes, conditional edges, routing.
-- **Project 2 (Research Agent)**: DONE. Has both scaffold and real LangGraph (`langgraph_research.py`) versions. New concepts: tool calling (`@tool`), agent loop, `ToolNode`, `bind_tools()`, RAG, citations.
-- **Project 3 (Writing Team)**: DONE. Has both scaffold and real LangGraph (`langgraph_writing_team.py`) versions. New concepts: multi-agent coordination (5 roles with different system prompts), pipeline edges, quality-control loop (editor→writer), revision tracking with MAX_REVISIONS safety cap.
-- **Project 4 (Data Analyst)**: DONE. Real LangGraph only (`langgraph_data_analyst.py`). New concepts: structured output (`with_structured_output()`), code execution, error-recovery loop, checkpointing (`MemorySaver`).
-- **Project 5 (Support Bot)**: DONE. Real LangGraph only (`langgraph_support_bot.py`). New concepts: sub-graphs (graphs inside graphs with input/output schemas), `interrupt()` (human-in-the-loop mid-execution), streaming (`stream_mode="updates"`). Has `subgraphs/` folder with billing, technical, returns departments.
-- **Project 6 (Intel Crew)**: DONE. CrewAI only (`flow.py`, `research_crew.py`, `analysis_crew.py`, `report_crew.py`). New concepts: CrewAI Flows (`@start`, `@listen` decorators for multi-crew pipelines), custom tools (`BaseTool` classes), Flow state (Pydantic `BaseModel` with direct mutation vs LangGraph merge). Known constraints: `output_pydantic` disabled (Instructor/Ollama incompatibility), crews return freeform text instead.
-- **Project 7 (Debate Arena)**: DONE. AG2 only (`debate.py`, `agents.py`, `models.py`). New concepts: AG2 `ConversableAgent` (conversational participants), `GroupChat` (shared conversation space), `GroupChatManager` (orchestrates turns), custom `speaker_selection_method` (structured debate flow), message-based termination (`is_termination_msg`). Uses Ollama via OpenAI-compatible API (`base_url`).
-- **Project 8 (BeeAI Research)**: DONE. BeeAI only (`agent.py`, `tools.py`, `events.py`). New concepts: BeeAI `ReActAgent` (built-in Think→Act→Observe loop), `Tool` base class (explicit Pydantic input schemas vs LangGraph's `@tool` inference), event-driven observability (`emitter.on("update"/"success"/"error")` for fine-grained logging of every ReAct step), `ChatModel.from_name("ollama:...")` (provider-agnostic LLM config), async-native execution (`await agent.run()`). Dep conflict: BeeAI and CrewAI can't coexist in Poetry (json-repair version clash), installed via pip.
-- **Project 9 (RAG Pipeline)**: DONE. LlamaIndex Workflows only (`workflow.py` → split into `ingestion.py`, `query.py`, `strategies.py`, `events.py`, `models.py`). New concepts: event-driven architecture (`@step` + typed `Event` classes vs LangGraph's explicit edges), document ingestion pipeline (PDF → chunk → embed → vector index), embedding models (`qwen3-embedding` via Ollama), retrieval strategies (keyword/BM25, semantic, hybrid, LLM-based reranking), workflow composition (IngestionWorkflow runs once, QueryWorkflow runs per question), conditional event routing (rerank step only fires for reranking strategy via `DocumentsReady` convergence event). Quality-control loop (evaluate_answer) designed but disabled due to local LLM timeout constraints — code commented with re-enable instructions. Dependencies installed via pip (llama-index-llms-ollama, llama-index-embeddings-ollama, llama-index-readers-file, llama-index-retrievers-bm25, pymupdf).
-- **Project 10**: Not started yet.
+| # | Project | Framework | Status | Key Files | Core Concepts |
+|---|---------|-----------|--------|-----------|---------------|
+| 1 | Chatbot | LangGraph + scaffold | DONE | `graph.py`, `langgraph_chatbot.py` | state, nodes, conditional edges, routing |
+| 2 | Research Agent | LangGraph + scaffold | DONE | `langgraph_research.py` | `@tool`, agent loop, `ToolNode`, RAG, citations |
+| 3 | Writing Team | LangGraph + CrewAI | DONE | `langgraph_writing_team.py` | multi-agent, pipeline edges, editor→writer loop |
+| 4 | Data Analyst | LangGraph | DONE | `langgraph_data_analyst.py` | `with_structured_output()`, code execution, checkpointing |
+| 5 | Support Bot | LangGraph | DONE | `langgraph_support_bot.py` | sub-graphs, `interrupt()`, streaming |
+| 6 | Intel Crew | CrewAI | DONE | `flow.py`, `*_crew.py` | Flows (`@start`/`@listen`), custom tools |
+| 7 | Debate Arena | AG2 | DONE | `debate.py`, `agents.py` | `ConversableAgent`, `GroupChat`, turn management |
+| 8 | BeeAI Research | BeeAI | DONE | `agent.py`, `tools.py` | `ReActAgent`, event-driven observability |
+| 9 | RAG Pipeline | LlamaIndex | DONE | `ingestion.py`, `query.py`, `strategies.py` | `@step` + Events, embeddings, retrieval strategies |
+| 10 | Framework Showdown | All 5 | DONE | per-framework dirs | cross-framework comparison |
+| 11 | Job Search MCP | MCP | DONE | `server.py`, `db.py` | `FastMCP`, resources, tools, prompts, validation |
 
 ## Tech Stack
 
@@ -41,6 +72,7 @@ src/langgraph_portfolio/    → actual implementation code
 - LangChain (langchain_core, langchain_ollama)
 - BeeAI Framework (beeai-framework, installed via pip due to dep conflict with CrewAI)
 - LlamaIndex Workflows (llama-index-core, llama-index-workflows, plus Ollama/BM25/file-reader sub-packages via pip)
+- MCP SDK (mcp, installed via pip — FastMCP for stdio server)
 - Ollama for local LLM (model: qwen3.5:2b for P9, qwen3.5:35b for others; embedding: qwen3-embedding)
 - Pydantic for structured output models
 
@@ -50,6 +82,14 @@ src/langgraph_portfolio/    → actual implementation code
 - We build step by step, explaining every concept before coding
 - P1-P3: scaffold version first, then real LangGraph version alongside it
 - P4+: real LangGraph only (no scaffold), tutor-style comments in the code
+
+## Gotchas
+
+- BeeAI and CrewAI can't coexist in Poetry (json-repair version clash) — BeeAI installed via pip
+- LlamaIndex sub-packages also installed via pip, not Poetry
+- CrewAI `output_pydantic` doesn't work with Ollama (Instructor incompatibility) — crews return freeform text
+- P9 quality-control loop disabled due to local LLM timeout — see code comments to re-enable
+- `pyproject.toml` script `project-5-capstone` is the Support Bot (naming mismatch)
 
 ## Conventions
 

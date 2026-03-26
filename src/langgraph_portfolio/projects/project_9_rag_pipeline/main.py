@@ -13,10 +13,8 @@ function composition (f(g(x))) but at the workflow level.
 
 RUNNING:
     poetry run project-9-rag-pipeline
-    # or
-    python project_9_rag_pipeline/main.py
 
-Place a PDF file in project_9_rag_pipeline/data/ before running.
+Place a PDF file in src/langgraph_portfolio/projects/project_9_rag_pipeline/data/ before running.
 """
 
 import asyncio
@@ -43,11 +41,12 @@ STRATEGIES = {
 def find_pdf() -> Path:
     """Find a PDF file in the data/ directory.
 
-    Looks in project_9_rag_pipeline/data/ first, then asks the user.
+    Looks in src/langgraph_portfolio/projects/project_9_rag_pipeline/data/ first,
+    then asks the user.
     """
     data_dirs = [
-        Path(__file__).resolve().parents[4] / "project_9_rag_pipeline" / "data",
-        Path.cwd() / "project_9_rag_pipeline" / "data",
+        Path(__file__).resolve().parent / "data",
+        Path.cwd() / "data",
     ]
 
     for data_dir in data_dirs:
@@ -66,7 +65,7 @@ def find_pdf() -> Path:
                 except (ValueError, IndexError):
                     return pdfs[0]
 
-    print("\nNo PDF found in project_9_rag_pipeline/data/")
+    print("\nNo PDF found in src/langgraph_portfolio/projects/project_9_rag_pipeline/data/")
     print("Please place a PDF file there and try again.")
     sys.exit(1)
 

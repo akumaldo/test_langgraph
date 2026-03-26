@@ -34,19 +34,12 @@ P4  Data Analyst (LangGraph)         P8  Research Agent v2 (BeeAI)
 ## Project Structure
 
 ```
-project_1_chatbot/              -> entry point (thin wrapper)
-project_2_research_agent/       -> entry point
-project_3_writing_team_*/       -> entry points (LangGraph + CrewAI versions)
-project_4_data_analyst/         -> entry point
-project_5_support_bot/          -> entry point
-project_6_intel_crew/           -> entry point
-project_7_debate_arena/         -> entry point
-project_8_beeai_research/       -> entry point
-project_9_rag_pipeline/         -> entry point
-project_10_showdown/            -> entry point (not started)
-src/langgraph_portfolio/        -> actual implementation code
+src/langgraph_portfolio/        -> all implementation code
   core/                         -> shared models, graph engine, knowledge base
-  projects/                     -> one subpackage per project
+  projects/                     -> one subpackage per project (each has main.py)
+tests/                          -> all tests (shared + per-project smoke tests)
+docs/                           -> planning & architecture docs
+scripts/                        -> utility scripts
 ```
 
 P1-P3 have both a **scaffold** version (custom `GraphBuilder`) and a **real LangGraph** version. P4+ are real-framework only.
@@ -70,8 +63,6 @@ poetry install
 
 # Run a project (example)
 poetry run project-1-chatbot
-# or
-python project_1_chatbot/main.py
 ```
 
 Make sure Ollama is running locally with the required models pulled.
