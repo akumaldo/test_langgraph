@@ -12,3 +12,6 @@ build/
 htmlcov/
 reports/
 *.db
+
+# P12 generated reports
+src/langgraph_portfolio/projects/project_12_analyst/reports/*.md

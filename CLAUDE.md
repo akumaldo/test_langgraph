@@ -2,7 +2,7 @@
 
 ## What this is
 
-A progressive learning portfolio with 10 projects that teach agentic AI frameworks (LangGraph, CrewAI, AG2, BeeAI, LlamaIndex). Each project builds on concepts from the previous one. See `docs/portfolio_expansion_plan.md` for the full roadmap.
+A progressive learning portfolio with 12 projects that teach agentic AI frameworks (LangGraph, CrewAI, AG2, BeeAI, LlamaIndex). Each project builds on concepts from the previous one. See `docs/portfolio_expansion_plan.md` for the full roadmap.
 
 ## Commands
 
@@ -14,7 +14,7 @@ pip install llama-index-llms-ollama llama-index-embeddings-ollama llama-index-re
 pip install mcp                       # MCP SDK
 
 # Ollama models (must be running: ollama serve)
-ollama pull qwen3.5:35b              # main LLM (P1-P8, P10-P11)
+ollama pull qwen3.5:35b              # main LLM (P1-P8, P10-P12)
 ollama pull qwen3.5:2b               # lighter LLM (P9 only)
 ollama pull qwen3-embedding           # embeddings (P9)
 
@@ -29,6 +29,7 @@ poetry run project-7-debate-arena
 poetry run project-8-beeai-research
 poetry run project-9-rag-pipeline
 poetry run project-11-mcp-server
+poetry run project-12-analyst
 
 # Tests
 poetry run pytest
@@ -64,6 +65,7 @@ scripts/                    → utility scripts
 | 9 | RAG Pipeline | LlamaIndex | DONE | `ingestion.py`, `query.py`, `strategies.py` | `@step` + Events, embeddings, retrieval strategies |
 | 10 | Framework Showdown | All 5 | DONE | per-framework dirs | cross-framework comparison |
 | 11 | Job Search MCP | MCP | DONE | `server.py`, `db.py` | `FastMCP`, resources, tools, prompts, validation |
+| 12 | Investment Committee | All 5 | DONE | `orchestrator.py`, `phases/`, `server.py` | cross-framework composition, MCP server, co-pilot HITL |
 
 ## Tech Stack
 
@@ -74,6 +76,7 @@ scripts/                    → utility scripts
 - LlamaIndex Workflows (llama-index-core, llama-index-workflows, plus Ollama/BM25/file-reader sub-packages via pip)
 - MCP SDK (mcp, installed via pip — FastMCP for stdio server)
 - Ollama for local LLM (model: qwen3.5:2b for P9, qwen3.5:35b for others; embedding: qwen3-embedding)
+- httpx for FMP REST API calls (P12)
 - Pydantic for structured output models
 
 ## How we work
