@@ -65,6 +65,52 @@ class FMPClientTest(unittest.TestCase):
         call_url = mock_client.get.call_args[0][0]
         self.assertIn("/stable/key-metrics-ttm", call_url)
 
+    @patch("langgraph_portfolio.projects.project_12_analyst.tools.fmp.httpx.AsyncClient")
+    def test_get_financial_scores(self, mock_client_cls) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
+
+        mock_response = MagicMock()
+        mock_response.json.return_value = [
+            {"altmanZScore": 5.2, "piotroskiScore": 7}
+        ]
+        mock_response.raise_for_status = MagicMock()
+
+        mock_client = AsyncMock()
+        mock_client.get.return_value = mock_response
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        client = FMPClient(api_key="test-key")
+        result = run(client.get_financial_scores("AAPL"))
+
+        self.assertEqual(result[0]["altmanZScore"], 5.2)
+        call_url = mock_client.get.call_args[0][0]
+        self.assertIn("/stable/financial-scores", call_url)
+
+    @patch("langgraph_portfolio.projects.project_12_analyst.tools.fmp.httpx.AsyncClient")
+    def test_get_revenue_segmentation(self, mock_client_cls) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
+
+        mock_response = MagicMock()
+        mock_response.json.return_value = [
+            {"iPhone": 200000000000, "Services": 85000000000}
+        ]
+        mock_response.raise_for_status = MagicMock()
+
+        mock_client = AsyncMock()
+        mock_client.get.return_value = mock_response
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client_cls.return_value = mock_client
+
+        client = FMPClient(api_key="test-key")
+        result = run(client.get_revenue_product_segmentation("AAPL"))
+
+        self.assertIsInstance(result, list)
+        call_url = mock_client.get.call_args[0][0]
+        self.assertIn("/stable/revenue-product-segmentation", call_url)
+
     def test_client_requires_api_key(self) -> None:
         from langgraph_portfolio.projects.project_12_analyst.tools.fmp import FMPClient
 

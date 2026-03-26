@@ -168,3 +168,57 @@ class FMPClient:
     async def get_quote(self, ticker: str) -> list[dict]:
         """Current stock quote."""
         return await self._get("quote", {"symbol": ticker})
+
+    # -- Financial Health & Growth (new stable endpoints) --
+
+    async def get_financial_scores(self, ticker: str) -> list[dict]:
+        """Altman Z-Score, Piotroski Score — quantitative health check."""
+        return await self._get("financial-scores", {"symbol": ticker})
+
+    async def get_financial_growth(
+        self, ticker: str, period: str = "annual", limit: int = 5
+    ) -> list[dict]:
+        """Pre-computed growth rates (revenue, EPS, FCF, etc.)."""
+        return await self._get(
+            "financial-growth",
+            {"symbol": ticker, "period": period, "limit": str(limit)},
+        )
+
+    async def get_owner_earnings(self, ticker: str) -> list[dict]:
+        """Buffett's owner earnings — cash available to shareholders."""
+        return await self._get("owner-earnings", {"symbol": ticker})
+
+    async def get_income_statement_growth(
+        self, ticker: str, period: str = "annual", limit: int = 5
+    ) -> list[dict]:
+        """YoY growth in income statement items."""
+        return await self._get(
+            "income-statement-growth",
+            {"symbol": ticker, "period": period, "limit": str(limit)},
+        )
+
+    # -- Revenue Segmentation --
+
+    async def get_revenue_product_segmentation(
+        self, ticker: str, period: str = "annual"
+    ) -> list[dict]:
+        """Revenue breakdown by product/segment."""
+        return await self._get(
+            "revenue-product-segmentation",
+            {"symbol": ticker, "period": period},
+        )
+
+    async def get_revenue_geographic_segmentation(
+        self, ticker: str, period: str = "annual"
+    ) -> list[dict]:
+        """Revenue breakdown by geography."""
+        return await self._get(
+            "revenue-geographic-segmentation",
+            {"symbol": ticker, "period": period},
+        )
+
+    # -- Ratings --
+
+    async def get_ratings_snapshot(self, ticker: str) -> list[dict]:
+        """Composite rating snapshot (buy/sell/hold + score)."""
+        return await self._get("ratings-snapshot", {"symbol": ticker})
