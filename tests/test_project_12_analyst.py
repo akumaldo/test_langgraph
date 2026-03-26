@@ -61,5 +61,53 @@ class StateTest(unittest.TestCase):
         self.assertEqual(state["current_phase"], "gathering")
 
 
+class OrchestratorTest(unittest.TestCase):
+    """Test that the parent graph compiles with all phases wired in."""
+
+    def test_parent_graph_compiles(self) -> None:
+        from langgraph.checkpoint.memory import MemorySaver
+        from langgraph_portfolio.projects.project_12_analyst.orchestrator import (
+            build_analyst_graph,
+        )
+
+        checkpointer = MemorySaver()
+        app = build_analyst_graph(checkpointer=checkpointer)
+        self.assertIsNotNone(app)
+
+    def test_route_after_interrupt_function(self) -> None:
+        from langgraph_portfolio.projects.project_12_analyst.orchestrator import (
+            route_after_review,
+        )
+        from langgraph_portfolio.projects.project_12_analyst.state import InvestmentState
+
+        state: InvestmentState = {
+            "ticker": "AAPL",
+            "company_name": "Apple Inc.",
+            "financials": {},
+            "ratios": {},
+            "estimates": {},
+            "insider_trades": [],
+            "grades": [],
+            "earnings_transcripts": [],
+            "data_summary": "",
+            "profitability_analysis": "",
+            "valuation_analysis": "",
+            "growth_analysis": "",
+            "analysis_summary": "",
+            "debate_transcript": "",
+            "key_disagreements": [],
+            "investment_thesis": "",
+            "risk_factors": [],
+            "catalysts": [],
+            "confidence_level": "",
+            "report_path": "",
+            "current_phase": "analysis",
+            "human_feedback": "",
+            "messages": [],
+        }
+        result = route_after_review(state)
+        self.assertIn(result, ["analyze", "debate", "thesis", "report", "gather"])
+
+
 if __name__ == "__main__":
     unittest.main()
